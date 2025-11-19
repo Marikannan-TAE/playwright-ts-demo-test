@@ -1,0 +1,32 @@
+[
+    {
+      "test_case": "TC1",
+      "uname": "Tester", 
+      "password": "test",
+      "exp_res": "Logout"
+    },
+    { 
+      "test_case": "TC2",
+      "uname": "Tester1", 
+      "password": "test",
+      "exp_res": "Invalid Login or Password."
+    },
+    {
+      "test_case": "TC3",
+      "uname": "Tester", 
+      "password": "test1",
+      "exp_res": "Invalid Login or Password."
+    },
+    {
+      "test_case": "TC4",
+      "uname": "", 
+      "password": "test",
+      "exp_res": "Invalid Login or Password." 
+    },
+    { 
+      "test_case": "TC5",
+      "uname": "Tester", 
+      "password": "",
+      "exp_res": "Invalid Login or Password."
+    }
+  ]

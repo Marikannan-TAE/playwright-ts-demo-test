@@ -1,0 +1,32 @@
+[
+    {
+      "test_case": "TC1",
+      "name": "Tester", 
+      "password": "test",
+      "exp_result": "List of All Orders"
+    },
+    { 
+      "test_case": "TC2",
+      "name": "Tester", 
+      "password": "test",
+      "exp_result": "List of All Orders"
+    },
+    { 
+      "test_case": "TC3",
+      "name": "Tester", 
+      "password": "test",
+      "exp_result": "List of All Orders"
+    },
+    { 
+      "test_case": "TC4",
+      "name": "Tester", 
+      "password": "test",
+      "exp_result": "List of All Orders"
+    },
+    { 
+      "test_case": "TC5",
+      "name": "Tester", 
+      "password": "test",
+      "exp_result": "List of All Orders"
+    }
+]
