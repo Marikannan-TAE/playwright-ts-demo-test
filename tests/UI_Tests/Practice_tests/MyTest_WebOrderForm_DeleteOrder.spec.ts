@@ -1,7 +1,7 @@
 import {test, expect, Locator,Page} from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
-test('WebOrder Form- Delete Order', async ({page}: {page: Page}) => {
+test('@sanity WebOrder Form- Delete Order', async ({page}: {page: Page}) => {
     await page.goto('http://secure.smartbearsoftware.com/samples/TestComplete11/WebOrders/Login.aspx');
     await page.getByLabel('Username').fill('Tester');
     await page.getByLabel('Password').fill('test');

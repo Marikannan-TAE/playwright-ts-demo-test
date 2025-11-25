@@ -7,13 +7,16 @@ import { defineConfig, devices } from '@playwright/test';
 // import dotenv from 'dotenv';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
-
+import dotenv from 'dotenv';
+dotenv.config();
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
   // testDir: './e2e',
-  testDir: './tests/UI_Tests',
+  //testDir: './tests/UI_Tests',
+  // testDir: './tests/ZeroBank_Tests',
+  testDir: './tests/API_Tests',
   timeout: 60000,
   /* Run tests in files in parallel */
   // fullyParallel: true,
@@ -35,6 +38,8 @@ export default defineConfig({
     headless: false,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    // Global API request settings
+    ignoreHTTPSErrors: true, // Ignore SSL certificate errors globally
   },
 
   /* Configure projects for major browsers */
@@ -43,9 +48,9 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'],
         viewport: {width:1536, height:864},
-        // launchOptions: {
-        //   slowMo: 200,
-        // },
+        launchOptions: {
+          slowMo: 300,
+        },
       },
     },
 
