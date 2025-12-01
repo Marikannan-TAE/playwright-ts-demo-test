@@ -47,17 +47,17 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Set environment file
+      - name: Load environment variables
         run: |
           if [ "${{ github.event.inputs.ENVIRONMENT }}" != "default" ]; then
-            echo "DOTENV_CONFIG_PATH=.env.${{ github.event.inputs.ENVIRONMENT }}" >> $GITHUB_ENV
+            cat .env.${{ github.event.inputs.ENVIRONMENT }} >> $GITHUB_ENV
           else
-            echo "DOTENV_CONFIG_PATH=.env" >> $GITHUB_ENV
+            cat .env >> $GITHUB_ENV
           fi
       
       - name: Show test configuration
         run: |
-          echo "DOTENV_CONFIG_PATH=${DOTENV_CONFIG_PATH}"
+          echo "MEDLINEPLUS_URL=${MEDLINEPLUS_URL}"
           echo "npx playwright test --config=sanity.config.ts --project=${{ github.event.inputs.BROWSER }} --workers=${{ github.event.inputs.WORKERS }} --grep '@sanity' --reporter=list,html"
 
       - name: Run Playwright Sanity Tests

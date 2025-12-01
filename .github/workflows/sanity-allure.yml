@@ -51,17 +51,17 @@ jobs:
       - name: Install Allure commandline
         run: npm install -g allure-commandline
 
-      - name: Set environment file
+      - name: Load environment variables
         run: |
           if [ "${{ github.event.inputs.ENVIRONMENT }}" != "default" ]; then
-            echo "DOTENV_CONFIG_PATH=.env.${{ github.event.inputs.ENVIRONMENT }}" >> $GITHUB_ENV
+            cat .env.${{ github.event.inputs.ENVIRONMENT }} >> $GITHUB_ENV
           else
-            echo "DOTENV_CONFIG_PATH=.env" >> $GITHUB_ENV
+            cat .env >> $GITHUB_ENV
           fi
 
       - name: Show test configuration
         run: |
-          echo "DOTENV_CONFIG_PATH=${DOTENV_CONFIG_PATH}"
+          echo "MEDLINEPLUS_URL=${MEDLINEPLUS_URL}"
           echo "Browser: ${{ github.event.inputs.BROWSER }}"
           echo "Workers: ${{ github.event.inputs.WORKERS }}"
           echo "Environment: ${{ github.event.inputs.ENVIRONMENT }}"

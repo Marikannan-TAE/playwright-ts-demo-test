@@ -16,6 +16,8 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    - name: Load environment variables
+      run: cat .env >> $GITHUB_ENV
     - name: Run Playwright tests
       run: npx playwright test --config=smoke.config.ts --grep '@smoke' --reporter=list,html
     - uses: actions/upload-artifact@v4
