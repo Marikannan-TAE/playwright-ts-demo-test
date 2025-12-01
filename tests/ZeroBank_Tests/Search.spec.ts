@@ -3,7 +3,7 @@ import { HomePage } from '../../Page_Objects/HomePage';
 import { SearchPage } from '../../Page_Objects/SearchPage';
 
  
-test.describe('Search Results @sanity', () => {
+test.describe('Search Results ', () => {
   let homePage: HomePage;
   let searchPage: SearchPage;
 

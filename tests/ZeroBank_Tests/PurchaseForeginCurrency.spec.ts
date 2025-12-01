@@ -19,7 +19,7 @@ interface ForeignCurrencyData {
 const dataPath = path.resolve(process.cwd(), 'tests', 'TestData', 'Foreign_Currency.json');
 const usersData: ForeignCurrencyData[] = BasePage.readDataFromJSONFile(dataPath);
 
-test.describe('Purchase Foreign Currency Cash @sanity', () => {
+test.describe('Purchase Foreign Currency Cash ', () => {
 
   test.beforeEach(async ({ page }: { page: Page }) => {
     const homePage = new HomePage(page);

@@ -36,6 +36,14 @@ export async function AccessToken(
     data: { email, password },
   });
 
+  /*
+    const response: APIResponse = await request.post(`${baseUrl}/notes/api/users/login`, {
+      headers: { "Content-Type": "application/json" },
+      data: {
+        email: process.env.API_USER_EMAIL as string,
+        password: process.env.API_USER_PASSWORD as string,
+      },
+  */
   if (response.status() !== 200) {
     throw new Error(`Failed to get token: ${response.status()} - ${response.statusText()}`);
   }

@@ -1,0 +1,6 @@
+Verifying drug detail sections...
+   - usage
+   - side-effects
+   - Brand names
+   - warnings
+ -All drug detail sections verified!

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Closed Shadow DOM Demo</title>
+  <style>
+    secret-box {
+      display: block;
+      padding: 10px;
+      margin-top: 20px;
+      background: #f2f2f2;
+      border: 1px solid #ccc;
+      width: 300px;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Closed Shadow DOM Example</h2>
+  <p>If everything works, you should see a grey box with a message below — BUT you cannot inspect the internal structure.</p>
+
+  <secret-box></secret-box>
+
+  <script>
+    class SecretBox extends HTMLElement {
+      constructor() {
+        super();
+
+        // Creates CLOSED Shadow DOM
+        const shadow = this.attachShadow({ mode: "closed" });
+
+        const wrapper = document.createElement('div');
+        wrapper.style.padding = "10px";
+        wrapper.style.background = "#fff";
+
+        const text = document.createElement('p');
+        text.textContent = "This text is inside a CLOSED shadow root.";
+
+        wrapper.appendChild(text);
+        shadow.appendChild(wrapper);
+      }
+    }
+
+    customElements.define("secret-box", SecretBox);
+  </script>
+
+</body>
+</html>

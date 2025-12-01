@@ -1,6 +1,6 @@
 import { test, expect, Page, Locator } from '@playwright/test';
 
-test('@smoke File Upload', async ({ page }) => {
+test(' File Upload', async ({ page }) => {
   await page.goto('https://the-internet.herokuapp.com/upload');
   await page.waitForLoadState('domcontentloaded');
 

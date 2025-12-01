@@ -1,6 +1,6 @@
 import { test, expect, Page, Locator } from '@playwright/test';
 
-test('Create Order → Update Order → Verify Order @smoke', async ({ page }: { page: Page }) => {
+test('Create Order → Update Order → Verify Order ', async ({ page }: { page: Page }) => {
   await page.goto('http://secure.smartbearsoftware.com/samples/TestComplete11/WebOrders/Login.aspx');
 
   await page.getByLabel('Username:').fill('Tester');

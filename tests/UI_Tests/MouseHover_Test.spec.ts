@@ -1,7 +1,7 @@
 import { test, expect, Page, Locator } from '@playwright/test';
 import { clear } from 'console';
 
-test('Flipkart Login Page Mouse Hover @smoke', async ({ page }: { page: Page }) => {
+test('Flipkart Login Page Mouse Hover ', async ({ page }: { page: Page }) => {
   await page.goto('https://www.flipkart.com/');
   await page.waitForLoadState('networkidle'); 
 

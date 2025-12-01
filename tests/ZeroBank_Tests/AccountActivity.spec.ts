@@ -4,7 +4,7 @@ import {SignInPage} from '../../Page_Objects/SignInPage';
 import {NavBar} from '../../Page_Objects/Components/NavBar';
 import {AccountActivityPage} from '../../Page_Objects/AccountActivityPage';
 
-test.describe('Verify Account Activity Transaction @sanity', () => {
+test.describe('Verify Account Activity Transaction ', () => {
   let homePage: HomePage;
   let signInPage: SignInPage;
   let navBar: NavBar;

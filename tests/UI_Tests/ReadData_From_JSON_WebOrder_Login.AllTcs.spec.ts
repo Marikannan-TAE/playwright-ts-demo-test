@@ -11,7 +11,7 @@ type UserRecord  = {
 const rawData: string = readFileSync('./tests/TestData/WebOrder_Login All_Tcs.json', 'utf-8');
 const users: UserRecord[] = JSON.parse(rawData);
 
-test.describe('WebOrder Login Functionality @smoke', () => {
+test.describe('WebOrder Login Functionality ', () => {
   test('Validate multiple login scenarios from JSON', async ({ page }: { page: Page }) => {
     for (const record of users) {
       console.log(`Running ${record.test_case}...`);

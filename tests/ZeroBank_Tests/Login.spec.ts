@@ -5,7 +5,7 @@ import { HomePage } from '../../Page_Objects/HomePage';
 
  //dotenv.config();
 
-test.describe('Login / Logout Flow @sanity', () => {
+test.describe('Login / Logout Flow ', () => {
   let signInPage: SignInPage;
   let homePage: HomePage;
 

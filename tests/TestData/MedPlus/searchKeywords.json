@@ -1,0 +1,24 @@
+{
+  "invalidKeywords": [
+    "xyzabc123",
+    "randomword999",
+    "nonexistent@#$",
+    "faketerminology",
+    "!@#$%^&*()",
+    "invalidmedicalterm"
+  ],
+  "validKeywords": [
+    "diabetes",
+    "heart disease",
+    "cancer",
+    "flu",
+    "covid",
+    "a"
+  ],
+  "edgeCaseKeywords": [
+    "",
+    " ",
+    "ab cd ef gh ij kl mn op qr st uv wx yz",
+    "!@#$%^&*()_+{}|:\"<>?[];'\\,./`~"
+  ]
+}

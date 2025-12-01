@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    environment {
+        NODE_ENV = 'test'
+        DOTENV_CONFIG_PATH = '.env'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Uses the repo and credentials configured in the job
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing Node dependencies...'
+                bat 'npm ci'  // faster and cleaner than npm install
+            }
+        }
+
+        stage('Install Playwright Browsers (if needed)') {
+            steps {
+                echo 'Checking if Playwright browsers are installed...'
+                // Install browsers only if missing
+                bat '''
+                if not exist "%USERPROFILE%\\.cache\\ms-playwright" (
+                    echo "Playwright browsers not found. Installing..."
+                    npx playwright install --with-deps
+                ) else (
+                    echo "Playwright browsers already installed. Skipping installation."
+                )
+                '''
+            }
+        }
+
+        stage('Run Smoke Tests') {
+            steps {
+                echo 'Running Playwright smoke tests...'
+                // Run tests, show case names in console + generate HTML report
+                bat 'npx playwright test --config=smoke.config.ts --grep @smoke --reporter=list,html'
+            }
+        }
+
+        stage('Publish Report') {
+            steps {
+                echo 'Publishing Playwright HTML report...'
+                publishHTML(target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'playwright-report',  // matches Playwright's output
+                    reportFiles: 'index.html',
+                    reportName: 'Playwright Smoke Test Report'
+                ])
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up workspace...'
+            cleanWs()
+        }
+    }
+}

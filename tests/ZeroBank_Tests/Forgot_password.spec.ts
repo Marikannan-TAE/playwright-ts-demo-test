@@ -3,7 +3,7 @@ import { HomePage } from '../../Page_Objects/HomePage';
 import { SignInPage } from '../../Page_Objects/SignInPage';
 import { ForgetPasswordPage } from '../../Page_Objects/ForgetPasswordPage';
 
-test.describe('Forget Password Flow @sanity', () => {
+test.describe('Forget Password Flow', () => {
   let signInPage: SignInPage;
   let homePage: HomePage;
   let forgotPasswordPage: ForgetPasswordPage;

@@ -1,0 +1,39 @@
+{
+    "testCases": [
+        {
+            "TestCase_ID": "TC_001",
+            "email": "sheela.test@gmail.com",
+            "password": "test123",
+            "exp_res": "Login successful",
+            "exp_status_code": 200
+        },
+        {
+            "TestCase_ID": "TC_002",
+            "email": "invalid@xyz.com",
+            "password": "test123",
+            "exp_res": "Incorrect email address or password",
+            "exp_status_code": 401
+        },
+        {
+            "TestCase_ID": "TC_003",
+            "email": "sheela.test@gmail.com",
+            "password": "wrongpass",
+            "exp_res": "Incorrect email address or password",
+            "exp_status_code": 401
+        },
+        {
+            "TestCase_ID": "TC_004",
+            "email": " ",
+            "password": "test123",
+            "exp_res": "A valid email address is required",
+            "exp_status_code": 400
+        },
+        {
+            "TestCase_ID": "TC_005",
+            "email": "sheela.test@gmail.com",
+            "password": " ",
+            "exp_res": "Password must be between 6 and 30 characters",
+            "exp_status_code": 400
+        }
+    ]
+}

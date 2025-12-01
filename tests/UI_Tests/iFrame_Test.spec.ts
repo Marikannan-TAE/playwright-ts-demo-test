@@ -1,6 +1,6 @@
 import { test, expect, Page, FrameLocator } from '@playwright/test';
 
-test('HDFC NetBanking Login Frame Handling @smoke', async ({ page }: { page: Page }) => {
+test('HDFC NetBanking Login Frame Handling ', async ({ page }: { page: Page }) => {
   await page.goto('https://netbanking.hdfcbank.com/netbanking/');
   // await page.fill('input[name="fldLoginUserId"]', '1000');
   // await page.click('text=CONTINUE');

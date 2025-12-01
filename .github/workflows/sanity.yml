@@ -1,0 +1,77 @@
+name: Sanity Tests - Parameterized
+
+on:
+  workflow_dispatch:
+    inputs:
+      BROWSER:
+        description: 'Browser to run tests on'
+        required: true
+        default: 'chromium'
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+      WORKERS:
+        description: 'Number of parallel workers'
+        required: true
+        default: '1'
+      ENVIRONMENT:
+        description: 'Environment file'
+        required: true
+        default: 'default'
+        type: choice
+        options:
+          - default
+          - qa
+          - stage
+          - prod
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Set environment file
+        run: |
+          if [ "${{ github.event.inputs.ENVIRONMENT }}" != "default" ]; then
+            echo "DOTENV_CONFIG_PATH=.env.${{ github.event.inputs.ENVIRONMENT }}" >> $GITHUB_ENV
+          else
+            echo "DOTENV_CONFIG_PATH=.env" >> $GITHUB_ENV
+          fi
+      
+      - name: Show test configuration
+        run: |
+          echo "DOTENV_CONFIG_PATH=${DOTENV_CONFIG_PATH}"
+          echo "npx playwright test --config=sanity.config.ts --project=${{ github.event.inputs.BROWSER }} --workers=${{ github.event.inputs.WORKERS }} --grep '@sanity' --reporter=list,html"
+
+      - name: Run Playwright Sanity Tests
+        run: |
+          npx playwright test \
+            --config=sanity.config.ts \
+            --project=${{ github.event.inputs.BROWSER }} \
+            --workers=${{ github.event.inputs.WORKERS }} \
+            --grep '@sanity' \
+            --reporter=list,html
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

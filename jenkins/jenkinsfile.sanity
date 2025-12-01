@@ -1,0 +1,119 @@
+pipeline {
+    agent any
+
+    parameters {
+        choice(name: 'BROWSER', choices: ['chromium', 'firefox', 'webkit'], description: 'Browser/project to run')
+        string(name: 'WORKERS', defaultValue: '2', description: 'Number of parallel workers')
+        choice(name: 'ENVIRONMENT', choices: ['default', 'qa', 'stage', 'prod'], description: 'Environment file')
+    }
+
+    environment {
+        NODE_ENV = 'test'
+        DOTENV_CONFIG_PATH = '.env'
+    }
+
+    options {
+        // Keep last 20 builds and artifacts
+        buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '20'))
+    }
+
+    stages {
+
+        stage('Checkout & Set Environment') {
+            steps {
+                checkout scm
+                script {
+                    if (params.ENVIRONMENT && params.ENVIRONMENT != 'default') {
+                        env.DOTENV_CONFIG_PATH = ".env.${params.ENVIRONMENT}"
+                    }
+                    echo "Using environment file: ${env.DOTENV_CONFIG_PATH}"
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing Node dependencies...'
+                bat 'npm ci'
+            }
+        }
+
+        stage('Install Playwright Browsers') {
+            steps {
+                echo 'Ensuring Playwright browsers are installed...'
+                bat '''
+                if not exist "%USERPROFILE%\\.cache\\ms-playwright" (
+                    echo "Installing Playwright browsers..."
+                    npx playwright install --with-deps
+                )
+                '''
+            }
+        }
+
+        stage('Run Playwright Sanity Tests') {
+            steps {
+                script {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                        echo "Running @sanity tests on ${params.BROWSER} with ${params.WORKERS} workers"
+                        bat "set DOTENV_CONFIG_PATH=${env.DOTENV_CONFIG_PATH} && npx playwright test --config=sanity.config.ts --project=${params.BROWSER} --workers=${params.WORKERS} --grep @sanity --reporter=list,html"
+                    }
+                }
+            }
+        }
+
+        stage('Build Page Report Summary') {
+            steps {
+                script {
+                    try {
+                        def job = Jenkins.instance.getItemByFullName(env.JOB_NAME)
+                        def builds = job.builds.take(5)
+                        def summary = new StringBuffer()
+                        summary << "<details><summary>Last 5 Playwright Reports</summary><ul>"
+
+                        for (b in builds) {
+                            def buildNum = b.number
+                            def result = b.result ?: 'IN PROGRESS'
+                            def htmlReport = "${b.url}Playwright_20Test_20Report/"
+                            def zipReport = "${b.url}artifact/playwright-report.zip"
+                            summary << "<li>#${buildNum} (${result}) → " +
+                                       "<a href='${htmlReport}'>HTML</a> | " +
+                                       "<a href='${zipReport}'>ZIP</a></li>"
+                        }
+
+                        summary << "</ul></details>"
+                        currentBuild.description = summary.toString()
+                    } catch (Exception e) {
+                        echo "Unable to generate build summary: ${e.message}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Publishing Playwright HTML report (even if tests failed)...'
+
+            publishHTML(target: [
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'playwright-report',
+                reportFiles: 'index.html',
+                reportName: 'Playwright Test Report'
+            ])
+
+            echo 'Archiving Playwright report ZIP...'
+            script {
+                bat '''
+                if exist "playwright-report.zip" del /f /q "playwright-report.zip"
+                powershell Compress-Archive -Path "playwright-report/*" -DestinationPath "playwright-report.zip" -Force
+                '''
+                archiveArtifacts artifacts: 'playwright-report.zip', fingerprint: true
+            }
+
+            echo 'Cleaning workspace...'
+            cleanWs()
+        }
+    }
+}
