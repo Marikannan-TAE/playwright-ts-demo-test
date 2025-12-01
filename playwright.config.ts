@@ -8,7 +8,14 @@ import { defineConfig, devices } from '@playwright/test';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 import dotenv from 'dotenv';
-dotenv.config();
+import fs from 'fs';
+import path from 'path';
+
+// Load .env file if it exists (not needed in CI as env vars are set via GITHUB_ENV)
+const envPath = path.resolve(process.cwd(), '.env');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+}
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
