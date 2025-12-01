@@ -1,22 +1,34 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-   import dotenv from 'dotenv';
-   dotenv.config();
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+// Load .env file if it exists (not needed in CI as env vars are set via GITHUB_ENV)
+const envPath = process.env.DOTENV_CONFIG_PATH 
+  ? path.resolve(process.cwd(), process.env.DOTENV_CONFIG_PATH)
+  : path.resolve(process.cwd(), '.env');
+
+if (fs.existsSync(envPath)) {
+  console.log(`Loading environment from: ${envPath}`);
+  dotenv.config({ path: envPath });
+} else {
+  console.log(`Environment file not found at: ${envPath}`);
+  dotenv.config();
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests/ZeroBank_Tests',
+  testDir: './tests/MedPlus',
 
   /* Run tests in files in parallel */
-  timeout: 30000,
+  timeout: 60000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -24,17 +36,17 @@ export default defineConfig({
      */
    timeout: 5000
   },
-//  fullyParallel: true,
-  workers: 2,
-//  retries: 1,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-//  forbidOnly: !!process.env.CI,
+  forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-//  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-//  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 2,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    ['html'],
+    ['line']
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
@@ -44,9 +56,9 @@ export default defineConfig({
     trace: 'on-first-retry',
     headless: true,
     screenshot: 'only-on-failure',
-    video: 'off',
-    // locale: 'en-US', // Emulates the browser locale.
-    // timezoneId: 'America/Los_Angeles', // Emulates the browser timezone.
+    video: 'retain-on-failure',
+    // Ignore SSL certificate errors globally
+    ignoreHTTPSErrors: true,
   },
 
   /* Configure projects for major browsers */
